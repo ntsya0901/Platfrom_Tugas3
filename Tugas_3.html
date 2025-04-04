@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hewan Favorit</title>
+    <style>
+        body { 
+            font-family: Georgia, sans-serif;
+            background: url('Kebun binatang.jpg');
+            background-size: cover;
+            text-align: center;
+        }
+        .title-container {
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-bottom: 30px;
+        }
+        .container {
+            width: 70%;
+            margin: auto;
+        }
+        .box {
+            background: #106804;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        h2, h3, label, p {
+            color: #ffffff;
+        }
+        input, button {
+            padding: 15px;
+            margin: 10px;
+            border-radius: 5px;
+            border: 1px solid #10cf69;
+        }
+        button {
+            background-color: #2c9f21;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #49ab3a;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="title-container">
+        <h2>Pilihan Hewan Favorit</h2>
+    </div>
+    <div class="container">
+        <div class="box">
+            <h3>- Data pemilik -</h3>
+            <label>Nama pemilik :</label> 
+            <input type="text" id="nama" placeholder="Masukkan Nama"><br><br>
+            
+            <label>Jumlah hewan:</label> 
+            <input type="number" id="jumlah" placeholder="Masukan jumlah hewan" min="1"><br><br>
+            
+            <button id="okButton" onclick="generateInputs()">OK</button>
+        </div>
+        
+        <div id="pilihanContainer" class="box hidden">
+            <h3>Masukkan Pilihan</h3>
+            <div id="pilihanInputs"></div>
+            <button id="pilihanButton" onclick="generateSelection()">OK</button>
+        </div>
+        
+        <div id="hasilContainer" class="box hidden">
+            <h3>Pilih Hewan Favorit</h3>
+            <div id="hasil"></div>
+            <button id="hasilButton" onclick="lockCheckboxes()">OK</button>
+        </div>
+        
+        <div id="finalContainer" class="box hidden">
+            <p id="finalResult"></p>
+        </div>
+    </div>
+    
+    <script>
+        // membuat input pilihan newan
+        function generateInputs() {
+            let nama = document.getElementById('nama');
+            let jumlah = document.getElementById('jumlah');
+            let pilihanInputs = document.getElementById('pilihanInputs');
+            let okButton = document.getElementById('okButton');
+            
+            if (!nama.value || !jumlah.value) {
+                alert("Masukkan nama dan jumlah hewan terlebih dahulu");
+                return;
+            }
+        // mematikan input dan button setelah di klik  
+            nama.disabled = true;
+            jumlah.disabled = true;
+            okButton.disabled = true;
+            pilihanInputs.innerHTML = '';
+         
+        // input sesuai dengan jumlah hewan 
+            for (let i = 1; i <= jumlah.value; i++) {
+                pilihanInputs.innerHTML += `<label>Pilihan ${i}: </label>
+                                            <input type="text" id="pilihan${i}"><br><br>`;
+            }
+        //  menampilkan   
+            document.getElementById('pilihanContainer').classList.remove('hidden');
+        }
+        // membuat checkbox pilihan hewan 
+        function generateSelection() {
+            let jumlah = document.getElementById('jumlah').value;
+            let hasil = document.getElementById('hasil');
+            let pilihanInputs = document.querySelectorAll('#pilihanInputs input');
+            let pilihanButton = document.getElementById('pilihanButton');
+            
+            hasil.innerHTML = '';
+        //  loop untuk membuat cek box   
+            for (let i = 1; i <= jumlah; i++) {
+                let pilihan = document.getElementById(`pilihan${i}`).value;
+                hasil.innerHTML += `<input type="checkbox" name="pilihan" value="${pilihan}"> ${pilihan}<br>`;
+            }
+        //  mematikan input   
+            pilihanInputs.forEach(input => input.disabled = true);
+            pilihanButton.disabled = true;
+            document.getElementById('hasilContainer').classList.remove('hidden');
+        }
+        //  mengunci pilihan 
+        function lockCheckboxes() {
+            let nama = document.getElementById('nama').value;
+            let jumlah = document.getElementById('jumlah').value;
+            let checkboxes = document.querySelectorAll('input[name="pilihan"]');
+            let selected = [];
+            let hasilButton = document.getElementById('hasilButton');
+        // loop untuk cek box yang dipilih  
+            checkboxes.forEach(cb => {
+                if (cb.checked) {
+                    selected.push(cb.value);
+                }
+                cb.disabled = true;
+            });
+        //  tampilan akhir 
+            if (selected.length > 0) {
+                document.getElementById('finalResult').innerText = `Hallo, nama saya ${nama}, saya mempunyai ${jumlah} pilihan hewan favorit, dan saya memilih ${selected.join(', ')}.`;
+                hasilButton.disabled = true;
+                document.getElementById('finalContainer').classList.remove('hidden');
+            } else {
+                alert("Silakan pilih setidaknya satu opsi!");
+            }
+        }
+    </script>
+</body>
+</html>
